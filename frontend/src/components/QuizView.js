@@ -68,10 +68,11 @@ class QuizView extends Component {
           guess: '',
           forceEnd: result.question ? false : true
         })
+        console.log(result.question)
         return;
       },
       error: (error) => {
-        alert('Unable to load question. Please try your request again')
+        alert('Unable to load question. Please try your request again haha')
         return;
       }
     })
