@@ -149,21 +149,22 @@ def create_app(test_config=None):
     answer = body.get("answer", None)
     difficulty = body.get("difficulty", None)
     category = body.get("category", None)
-    try:
-      new_question = Question(
-        question=question, 
-        answer=answer, 
-        category=category, 
-        difficulty=difficulty
-      )
-      
-      new_question.insert()
 
-      return jsonify(
-        {'questions': new_question.format()}
-      )
-    except:
+    if None in (question, answer, difficulty, category):
       abort(422)
+    
+    new_question = Question(
+      question=question, 
+      answer=answer, 
+      category=category, 
+      difficulty=difficulty
+    )
+    
+    new_question.insert()
+
+    return jsonify(
+      new_question.format()
+    )
 
   '''
   @TODO: 
@@ -249,9 +250,6 @@ def create_app(test_config=None):
     print(previous_questions, selected_category)
 
     try:
-      if None in (previous_questions, selected_category):
-        abort(422)
-
       if (selected_category['id'] == 0):
         unused_questions = Question.query.order_by(Question.id).filter(
           Question.id.notin_(previous_questions)
@@ -267,10 +265,10 @@ def create_app(test_config=None):
       print(len(unused_questions))
       
       if len(unused_questions) > 0:
-        new_question = unused_questions[random.randint(0, len(unused_questions))]
+        new_question = unused_questions[random.randint(0, len(unused_questions))].format()
       else:
         new_question = None
-
+      print(new_question)
 
       return jsonify(
         {
